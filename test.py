@@ -1,6 +1,20 @@
 #!/usr/bin/python
 # coding:utf-8
-from futu import *
-quote_ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
-print(quote_ctx.get_market_snapshot('HK.00700'))
-quote_ctx.close()
+import pandas as pd
+
+json = {
+    'foo': ['one', 'one', 'one', 'two', 'two', 'two'],
+    'bar': ['A', 'B', 'C', 'A', 'B', 'C'],
+    'baz': [1, 2, 3, 4, 5, 6],
+    'zoo': ['x', 'y', 'z', 'q', 'w', 't']
+}
+data = pd.DataFrame(json)
+print(json)
+print(data)
+
+json2 = data.pivot(index='foo', columns='bar', values='baz')
+print(json2)
+
+file = open('50ETF.json', 'w')
+file.write(json2.to_json())
+file.close()
