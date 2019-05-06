@@ -7,7 +7,7 @@ var sumFee = 0; // 总交易费用
 var sumGainLossRate = 0;
 var lastPrice = 0; //股票最后交易日价格
 
-var dingtouBase = 10000; // 定投金额(元)，每次购股花费
+var dingtouBase = 5000; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
 
 var rate = 0.1; // 撤回比例
@@ -62,3 +62,4 @@ console.log('账户总持仓：', sumStoke, `(${sumStoke * 100})`)
 console.log('账户总价值：', sumValue)
 console.log('账户总花费：', sumCost)
 console.log('账户总盈亏：', sumGainLossRate)
+console.log('交易总手续费：', sumFee)
