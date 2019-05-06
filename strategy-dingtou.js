@@ -38,7 +38,7 @@ var qtAvg = function () {
 
       sumGainLossRate = (((sumValue - sumCost) / sumCost) * 100).toFixed(3) + '%';
 
-      console.log(`*******交易日 ${element.time_key} -- ${index}*******`)
+      console.log(`-------交易日 ${element.time_key} -- ${index}-------`)
 
       console.log('最新价格：', lastPrice)
       console.log('今日交易数量：', stokeNum, `(${stokeNum * 100})`)
@@ -57,7 +57,7 @@ var qtAvg = function () {
 
 qtAvg();
 
-console.log('***********定期定投策略***********')
+console.log(`-------${startTime}~${endTime}-----定期定投策略-------------`)
 console.log('账户总持仓：', sumStoke, `(${sumStoke * 100})`)
 console.log('账户总价值：', sumValue)
 console.log('账户总花费：', sumCost)
