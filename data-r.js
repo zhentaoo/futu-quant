@@ -45,7 +45,7 @@ for (let index = 0; index < ETF50.length; index++) {
   etf.r40 = etf.r40.toFixed(3) - 0;
 }
 
-fs.writeFileSync('./50ETF.json', JSON.stringify(ETF50, 2, 2))
+fs.writeFileSync('./data-r40/50ETF.json', JSON.stringify(ETF50, 2, 2))
 
 
 // 300ETF
@@ -87,7 +87,7 @@ for (let index = 0; index < ETF300.length; index++) {
   etf.r40 = etf.r40.toFixed(3) - 0;
 }
 
-fs.writeFileSync('./300ETF.json', JSON.stringify(ETF300, 2, 2))
+fs.writeFileSync('./data-r40/300ETF.json', JSON.stringify(ETF300, 2, 2))
 
 
 // 500ETF
@@ -129,4 +129,4 @@ for (let index = 0; index < ETF500.length; index++) {
   etf.r40 = etf.r40.toFixed(3) - 0;
 }
 
-fs.writeFileSync('./500ETF.json', JSON.stringify(ETF500, 2, 2))
+fs.writeFileSync('./data-r40/500ETF.json', JSON.stringify(ETF500, 2, 2))

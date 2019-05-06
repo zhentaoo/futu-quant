@@ -1,7 +1,14 @@
-var ETF = require('./data-r20/50ETF.json');
+var ETF = require('./data-r40/500ETF.json');
 
-var cash = 300000;// 元，初始现金数量
-var base = 2000; // 元，每次交易价格
+var cash = 1000000;// 元，初始现金数量
+
+// var base = 10000; // 元，每次交易价格
+// var cycle = 20; // 日，五个交易日为一周，20个交易日为一月
+
+var base = 2500; // 元，每次交易价格
+var cycle = 5; // 日，五个交易日为一周，20个交易日为一月
+
+
 var stoke = 0; // 手，一手100股
 var lastPrice = 0; //股票最后交易日价格
 var fee = 0; // 总交易费用
@@ -16,7 +23,9 @@ var endTime = "2019-04-30";
 var qtAvg = function () {
   for (let index = 0; index < ETF.length; index++) {
     const element = ETF[index];
-    if (index % 20 == 0 && cash > 0) {
+    
+
+    if (index % cycle == 0 && cash > 0) {
       let stokeNum = Math.round(base / (element.close * 100));
       let cost = stokeNum * element.close * 100;
       fee = 5 + fee;
