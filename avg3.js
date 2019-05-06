@@ -1,4 +1,4 @@
-var ETF = require('./data-r40/50ETF.json');
+var ETF = require('./data-r40/500ETF.json');
 
 var sumCost = 0;// 购股总花费(花了多少钱)
 var sumStoke = 0; // 账户总手数，一手100股，初始为0（有多少股）
@@ -11,7 +11,7 @@ var dingtouBase = 10000; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
 
 var rate = 0.1; // 撤回比例
-var startTime = '2015-05-01';
+var startTime = '2015-12-01';
 var endTime = "2019-04-30";
 
 /**
@@ -29,19 +29,19 @@ var qtAvg = function () {
     if (index % dingtouCycle == 0) {
       let stokeNum = Math.round(dingtouBase / (lastPrice * 100));
       let cost = stokeNum * lastPrice * 100 + 5;
-
+      
       sumCost = sumCost + cost;
       sumStoke = sumStoke + stokeNum;
-
+      
       sumValue = sumStoke * 100 * lastPrice;
       sumFee = sumFee + 5;
 
-      sumGainLossRate = (((sumValue - sumCost) / sumCost) * 100).toFixed(3) + '%';
+      sumGainLossRate = (((sumValue - sumCost) / sumCost)*100).toFixed(3) + '%';
 
       console.log(`*******交易日 ${element.time_key} -- ${index}*******`)
 
       console.log('最新价格：', lastPrice)
-      console.log('今日交易数量：', stokeNum, `(${stokeNum * 100})`)
+      console.log('今日交易数量：', stokeNum, `(${stokeNum*100})`)
       console.log('今日申股花费：', cost)
       console.log('今日交易费用：', 5)
 
