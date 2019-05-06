@@ -57,7 +57,7 @@ var qtAvg = function () {
 
 qtAvg();
 
-console.log('***********最终交易结束***********')
+console.log('***********定期定投策略***********')
 console.log('账户总持仓：', sumStoke, `(${sumStoke * 100})`)
 console.log('账户总价值：', sumValue)
 console.log('账户总花费：', sumCost)

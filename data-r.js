@@ -1,7 +1,7 @@
 var fs = require('fs');
-var ETF50 = require('./data-back/50ETF.json')
-var ETF300 = require('./data-back/300ETF.json')
-var ETF500 = require('./data-back/500ETF.json')
+var ETF50 = require('./data-futu/50ETF.json')
+var ETF300 = require('./data-futu/300ETF.json')
+var ETF500 = require('./data-futu/500ETF.json')
 
 /**
  * 数据处理，增加各个均线
@@ -38,11 +38,11 @@ for (let index = 0; index < ETF50.length; index++) {
     etf.r40 = etf.r40 + ETF50[i].close;
   }
 
-  etf.r5 = etf.r5.toFixed(3) - 0;
-  etf.r10 = etf.r10.toFixed(3) - 0;
-  etf.r20 = etf.r20.toFixed(3) - 0;
-  etf.r30 = etf.r30.toFixed(3) - 0;
-  etf.r40 = etf.r40.toFixed(3) - 0;
+  etf.r5 = (etf.r5 / 5).toFixed(3) - 0;
+  etf.r10 = (etf.r10 / 10).toFixed(3) - 0;
+  etf.r20 = (etf.r20 / 20).toFixed(3) - 0;
+  etf.r30 = (etf.r30 / 30).toFixed(3) - 0;
+  etf.r40 = (etf.r40 / 40).toFixed(3) - 0;
 }
 
 fs.writeFileSync('./data-r40/50ETF.json', JSON.stringify(ETF50, 2, 2))
@@ -80,11 +80,11 @@ for (let index = 0; index < ETF300.length; index++) {
     etf.r40 = etf.r40 + ETF300[i].close;
   }
 
-  etf.r5 = etf.r5.toFixed(3) - 0;
-  etf.r10 = etf.r10.toFixed(3) - 0;
-  etf.r20 = etf.r20.toFixed(3) - 0;
-  etf.r30 = etf.r30.toFixed(3) - 0;
-  etf.r40 = etf.r40.toFixed(3) - 0;
+  etf.r5 = (etf.r5 / 5).toFixed(3) - 0;
+  etf.r10 = (etf.r10 / 10).toFixed(3) - 0;
+  etf.r20 = (etf.r20 / 20).toFixed(3) - 0;
+  etf.r30 = (etf.r30 / 30).toFixed(3) - 0;
+  etf.r40 = (etf.r40 / 40).toFixed(3) - 0;
 }
 
 fs.writeFileSync('./data-r40/300ETF.json', JSON.stringify(ETF300, 2, 2))
@@ -122,11 +122,11 @@ for (let index = 0; index < ETF500.length; index++) {
     etf.r40 = etf.r40 + ETF500[i].close;
   }
 
-  etf.r5 = etf.r5.toFixed(3) - 0;
-  etf.r10 = etf.r10.toFixed(3) - 0;
-  etf.r20 = etf.r20.toFixed(3) - 0;
-  etf.r30 = etf.r30.toFixed(3) - 0;
-  etf.r40 = etf.r40.toFixed(3) - 0;
+  etf.r5 = (etf.r5 / 5).toFixed(3) - 0;
+  etf.r10 = (etf.r10 / 10).toFixed(3) - 0;
+  etf.r20 = (etf.r20 / 20).toFixed(3) - 0;
+  etf.r30 = (etf.r30 /30).toFixed(3) - 0;
+  etf.r40 = (etf.r40 / 40).toFixed(3) - 0;
 }
 
 fs.writeFileSync('./data-r40/500ETF.json', JSON.stringify(ETF500, 2, 2))
