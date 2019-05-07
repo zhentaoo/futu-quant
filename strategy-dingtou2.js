@@ -20,7 +20,7 @@ var endTime = "2019-04-30";
 var qtAvg = function () {
   for (let index = 0; index < ETF.length; index++) {
     const element = ETF[index];
-    lastPrice = element.close;
+    lastPrice = element.open;
 
     if (element.time_key < startTime) {
       continue;
@@ -28,6 +28,12 @@ var qtAvg = function () {
 
     if (index % dingtouCycle == 0) {
       let stokeNum = Math.round(dingtouBase / (lastPrice * 100));
+      let oldStokeNum = stokeNum;
+      if(lastPrice > element.r20) {
+        stokeNum = Math.round( stokeNum * 0.8)
+      } else {
+        stokeNum = Math.round( stokeNum * 1.2)
+      }
       let cost = stokeNum * lastPrice * 100 + 5;
 
       sumCost = sumCost + cost;
@@ -40,8 +46,8 @@ var qtAvg = function () {
 
       console.log(`-------交易日 ${element.time_key} -- ${index}-------`)
 
-      console.log('最新价格：', lastPrice)
-      console.log('今日交易数量：', stokeNum, `(${stokeNum * 100})`)
+      console.log('最新价格：', lastPrice, '20日均线：', element.r20)
+      console.log('今日交易数量：', stokeNum, `(${stokeNum * 100})`, '--- 原计划：', oldStokeNum)
       console.log('今日申股花费：', cost)
       console.log('今日交易费用：', 5)
 
