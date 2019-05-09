@@ -127,7 +127,7 @@ var qtAvg = function () {
       交易后持仓总盈亏比:${(chicangRate * 100).toFixed(3) + '%'}
   ***当日结算***
       账户总持仓：${ sumStoke} 手(${sumStoke * 100 * chicangStokeAvgCost}元)
-        账户总现金：${ sumAccount} 元
+      账户总现金：${ sumAccount} 元
       账户总价值：${ sumValue} 元
       账户总盈亏：${ sumValue - baseAccount} 元
       账户总盈亏比例：${ sumGainLossRate}
