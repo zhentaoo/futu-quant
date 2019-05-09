@@ -11,13 +11,8 @@ var dingtouBase = 5000; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
 
 var rate = 0.1; // 撤回比例
-
-// var startTime = '2013-05-01';
-// var startTime = '2016-12-01';
-// var startTime = '2018-12-01';
-var startTime = '2018-12-01';
-
-var endTime = "2019-03-30";
+var startTime = '2005-05-01';
+var endTime = "2019-04-30";
 
 /**
  * 每月（20个交易日），定投
@@ -25,7 +20,7 @@ var endTime = "2019-03-30";
 var qtAvg = function () {
   for (let index = 0; index < ETF.length; index++) {
     const element = ETF[index];
-    lastPrice = element.close;
+    lastPrice = element.open;
 
     if (element.time_key < startTime) {
       continue;
@@ -33,6 +28,12 @@ var qtAvg = function () {
 
     if (index % dingtouCycle == 0) {
       let stokeNum = Math.round(dingtouBase / (lastPrice * 100));
+      let oldStokeNum = stokeNum;
+      if(lastPrice > element.r20) {
+        stokeNum = Math.round( stokeNum * 0.8)
+      } else {
+        stokeNum = Math.round( stokeNum * 1.2)
+      }
       let cost = stokeNum * lastPrice * 100 + 5;
 
       sumCost = sumCost + cost;
@@ -43,10 +44,10 @@ var qtAvg = function () {
 
       sumGainLossRate = (((sumValue - sumCost) / sumCost) * 100).toFixed(3) + '%';
 
-      console.log(`-------交易日 ${element.time_key} -- ${index}-- 定期定投 ${ETF[0].code} -------`)
+      console.log(`-------交易日 ${element.time_key} -- ${index}-------`)
 
-      console.log('最新价格：', lastPrice)
-      console.log('今日交易数量：', stokeNum, `(${stokeNum * 100})`)
+      console.log('最新价格：', lastPrice, '20日均线：', element.r20)
+      console.log('今日交易数量：', stokeNum, `(${stokeNum * 100})`, '--- 原计划：', oldStokeNum)
       console.log('今日申股花费：', cost)
       console.log('今日交易费用：', 5)
 
@@ -62,10 +63,9 @@ var qtAvg = function () {
 
 qtAvg();
 
-console.log(`-------${startTime}~${endTime}-----定期定投 ${ETF[0].code}-------------`)
+console.log(`-------${startTime}~${endTime}-----定期定投策略-------------`)
 console.log('账户总持仓：', sumStoke, `(${sumStoke * 100})`)
 console.log('账户总价值：', sumValue)
 console.log('账户总花费：', sumCost)
-console.log('账户总盈亏比例：', sumGainLossRate)
-console.log('账户总盈亏：', sumValue - sumCost)
+console.log('账户总盈亏：', sumGainLossRate)
 console.log('交易总手续费：', sumFee)
