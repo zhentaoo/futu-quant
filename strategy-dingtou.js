@@ -15,7 +15,7 @@ var chicangStokeAvgCost = 0; //股票成本价
 
 var lastPrice = 0; //股票最后交易日价格
 
-var dingtouBase = 2000; // 定投金额(元)，每次购股花费
+var dingtouBase = 1000; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
 var clearCount = 0; //清仓次数
 
@@ -26,8 +26,8 @@ var startTime = '2015-03-30';
 // var startTime = '2017-03-30';
 // var startTime = '2018-03-30';
 
-// var endTime = "2019-03-30";
-var endTime = "2018-03-30";
+var endTime = "2017-01-01";
+// var endTime = "2018-03-30";
 
 /**
  * 每月（20个交易日），定投
@@ -76,7 +76,7 @@ var qtAvg = function () {
     }
 
     // 未做交易
-    if (stoke == 0 || sumAccount < 5500) {
+    if (stoke == 0 || sumAccount < dingtouBase * 1.2) {
       continue
     }
 

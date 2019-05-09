@@ -15,10 +15,11 @@ var chicangStokeAvgCost = 0; //股票成本价
 
 var lastPrice = 0; //股票最后交易日价格
 
-var dingtouBase = 2000; // 定投金额(元)，每次购股花费
+var dingtouBase = 800; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
 var sellCount = 0; //清仓次数
 var isSell = false;
+var sellDate = 0;
 
 // var startTime = '2013-03-30';
 // var startTime = '2014-03-30';
@@ -27,8 +28,8 @@ var startTime = '2015-03-30';
 // var startTime = '2017-03-30';
 // var startTime = '2018-03-30';
 
-// var endTime = "2019-03-30";
-var endTime = "2018-03-30";
+var endTime = "2017-01-01";
+// var endTime = "2018-03-30";
 
 /**
  * 每月（20个交易日），定投
@@ -65,34 +66,32 @@ var qtAvg = function () {
       chicangRate = 0;
       chicangStokeAvgCost = lastPrice;
     } else {
-
-      if (chicangRate > 0.1 && sumStoke > 0) {
-        // stoke = -1 * oneUnitStoke;
-        // stoke = -1 * sumStoke;
-
-        // 持仓盈利：
-        isSell = true;
-        let cash = (sumStoke * 100 * lastPrice) * chicangRate;
-        stoke = - Math.round(cash / (lastPrice * 100));
-
-        sellCount++;
-        tradeType = "盈利 > 10%，止盈";
-      }
-      else if (chicangRate < -0.2 && sumAccount > 0) {
-        stoke = 2 * oneUnitStoke;
-        tradeType = "亏损 > 20%，加购2个单位";
-      }
-      else if (chicangRate < -0.15 && sumAccount > 0) {
-        stoke = 1 * oneUnitStoke;
-        tradeType = "亏损 > 15%，加购1个单位";
-      }
-      else if (chicangRate < -0.1 && sumAccount > 0) {
-        stoke = oneUnitStoke;
-        tradeType = "亏损 > 10%，加购1个单位";
-      }
-      else if (index % dingtouCycle == 0 && sumAccount > 0) {
+      if (index % dingtouCycle == 0 && sumAccount > 0) {
         stoke = oneUnitStoke;
         tradeType = "周期到了，加购1个单位";
+      } else if ((index - sellDate) > 5) {
+        if (chicangRate > 0.1 && sumStoke > 0) {
+          // 持仓盈利：
+          let cash = (sumStoke * 100 * lastPrice) * chicangRate;
+          stoke = - Math.round(cash / (lastPrice * 100));
+
+          isSell = true;
+          sellDate = index;
+          sellCount++;
+          tradeType = "盈利 > 10%，止盈";
+        }
+        else if (chicangRate < -0.2 && sumAccount > 0) {
+          stoke = 2 * oneUnitStoke;
+          tradeType = "亏损 > 20%，加购2个单位";
+        }
+        else if (chicangRate < -0.15 && sumAccount > 0) {
+          stoke = 1 * oneUnitStoke;
+          tradeType = "亏损 > 15%，加购1个单位";
+        }
+        else if (chicangRate < -0.1 && sumAccount > 0) {
+          stoke = oneUnitStoke;
+          tradeType = "亏损 > 10%，加购1个单位";
+        }
       }
 
       // 不能卖的比持有的多
@@ -123,9 +122,10 @@ var qtAvg = function () {
     }
 
     // 未做交易
-    if (stoke == 0 || sumAccount < 5500) {
+    if (stoke == 0 || sumAccount < dingtouBase * 1.2) {
       continue
     }
+    sellDate = index;
 
     // 如果卖出操作手续费提升
     if (isSell) {
