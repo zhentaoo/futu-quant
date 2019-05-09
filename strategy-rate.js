@@ -30,10 +30,12 @@ var qtAvg = function () {
   for (let index = 0; index < ETF.length; index++) {
     const element = ETF[index];
     lastPrice = element.close;
+
     let stoke = 0;//当前交易日购股数量
     let oneUnitStoke = Math.round(dingtouBase / (lastPrice * 100)); //一个单位的交易数量
-    let startChicangStokeAvgCost = chicangStokeAvgCost;
-    let startChicangRate = chicangRate;
+
+    let startChicangStokeAvgCost = chicangStokeAvgCost; // 交易前持仓成本价
+    let startChicangRate = chicangRate; // 交易钱持仓盈亏比
 
     // 日期优先
     if (element.time_key < startTime) {
@@ -41,19 +43,17 @@ var qtAvg = function () {
     }
 
     if (sumStoke == 0) {
+      tradeType = "空仓状态，加购1个单位"
       stoke = oneUnitStoke;
 
       chicangRate = 0;
       chicangStokeAvgCost = lastPrice;
-      tradeType = "空仓状态，加购1个单位"
     } else {
-      chicangRate = (lastPrice - chicangStokeAvgCost) / chicangStokeAvgCost;
-
       // 盈利 > 20%，清仓
       if (chicangRate > 0.2 && sumStoke > 0) {
         // stoke = -sumStoke;
         // tradeType = "盈利 > 20%，清仓";
-        
+
         stoke = -2 * oneUnitStoke;
         tradeType = "盈利 > 20%，卖出2个单位";
       }
@@ -78,17 +78,24 @@ var qtAvg = function () {
         tradeType = "周期到了，加购1个单位";
       }
 
+      // 不能卖的比持有的多
+      if(stoke < 0 && Math.abs(stoke) > sumStoke) {
+        stoke = -sumStoke;
+      }
+
       if (sumStoke + stoke == 0) {
         chicangStokeAvgCost = 0;
         chicangRate = 0;
       } else {
         chicangStokeAvgCost = (sumStoke * chicangStokeAvgCost + stoke * lastPrice) / (sumStoke + stoke);
         chicangStokeAvgCost = chicangStokeAvgCost.toFixed(4) - 0;
+
+        chicangRate = (lastPrice - chicangStokeAvgCost) / chicangStokeAvgCost;
       }
     }
 
     // 未做交易
-    if (stoke == 0 || sumStoke + stoke < 0 || sumAccount < 4000) {
+    if (stoke == 0 || sumStoke + stoke < 0 || sumAccount < 5500) {
       continue
     }
 
@@ -103,7 +110,7 @@ var qtAvg = function () {
     console.log('交易前持仓总盈亏比', startChicangRate)
     console.log(`最新价格：${lastPrice}`)
     console.log('今日交易数：', stoke > 0 ? `+${stoke}` : stoke)
-    console.log(`交易后成本价：${chicangStokeAvgCost }`);
+    console.log(`交易后成本价：${chicangStokeAvgCost}`);
     console.log('交易后持仓总盈亏比', chicangRate)
     console.log('***当日结算***');
     console.log(`账户总持仓：${sumStoke}手 (${sumStoke * 100 * chicangStokeAvgCost}元)`);
