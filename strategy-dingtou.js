@@ -13,8 +13,10 @@ var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个�
 var rate = 0.1; // 撤回比例
 
 // var startTime = '2013-05-01';
-var startTime = '2016-12-01';
+// var startTime = '2016-12-01';
 // var startTime = '2018-12-01';
+var startTime = '2018-12-01';
+
 var endTime = "2019-03-30";
 
 /**
@@ -64,5 +66,6 @@ console.log(`-------${startTime}~${endTime}-----定期定投 ${ETF[0].code}-----
 console.log('账户总持仓：', sumStoke, `(${sumStoke * 100})`)
 console.log('账户总价值：', sumValue)
 console.log('账户总花费：', sumCost)
-console.log('账户总盈亏：', sumGainLossRate)
+console.log('账户总盈亏比例：', sumGainLossRate)
+console.log('账户总盈亏：', sumValue - sumCost)
 console.log('交易总手续费：', sumFee)
