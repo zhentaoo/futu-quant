@@ -7,16 +7,15 @@ var sumFee = 0; // 总交易费用
 var sumGainLossRate = 0;
 var lastPrice = 0; //股票最后交易日价格
 
-var dingtouBase = 5000; // 定投金额(元)，每次购股花费
+var dingtouBase = 1000; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
 
 var rate = 0.1; // 撤回比例
 
-// var startTime = '2013-05-01';
+var startTime = '2013-05-01';
 // var startTime = '2016-12-01';
+// var startTime = '2017-12-01';
 // var startTime = '2018-12-01';
-var startTime = '2018-12-01';
-
 var endTime = "2019-03-30";
 
 /**
