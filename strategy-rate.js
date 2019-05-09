@@ -17,11 +17,12 @@ var lastPrice = 0; //股票最后交易日价格
 
 var dingtouBase = 2000; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
-var clearCount = 0; //清仓次数
+var sellCount = 0; //清仓次数
+var isSell = false;
 
 // var startTime = '2013-03-30';
-var startTime = '2014-03-30';
-// var startTime = '2015-03-30';
+// var startTime = '2014-03-30';
+var startTime = '2015-03-30';
 // var startTime = '2016-03-30';
 // var startTime = '2017-03-30';
 // var startTime = '2018-03-30';
@@ -36,12 +37,13 @@ var qtAvg = function () {
   for (let index = 0; index < ETF.length; index++) {
     const element = ETF[index];
     lastPrice = element.close;
+    isSell = false;
 
     let stoke = 0;//当前交易日购股数量
     let oneUnitStoke = Math.round(dingtouBase / (lastPrice * 100)); //一个单位的交易数量
 
     let startChicangStokeAvgCost = chicangStokeAvgCost; // 交易前持仓成本价
-    let startChicangRate = 0;
+    let startChicangRate = null;
     if (chicangStokeAvgCost == 0) {
       startChicangRate = 0;
     } else {
@@ -52,7 +54,7 @@ var qtAvg = function () {
     if (element.time_key < startTime) {
       continue;
     }
-    if(element.time_key > endTime) {
+    if (element.time_key > endTime) {
       break;
     }
 
@@ -63,12 +65,17 @@ var qtAvg = function () {
       chicangRate = 0;
       chicangStokeAvgCost = lastPrice;
     } else {
-      
-      if (chicangRate > 0.8 && sumStoke > 0) {
+
+      if (chicangRate > 0.1 && sumStoke > 0) {
         // stoke = -1 * oneUnitStoke;
-        stoke = -1 * sumStoke;
-        
-        // clearCount++;
+        // stoke = -1 * sumStoke;
+
+        // 持仓盈利：
+        isSell = true;
+        let cash = (sumStoke * 100 * lastPrice) * chicangRate;
+        stoke = - Math.round(cash / (lastPrice * 100));
+
+        sellCount++;
         tradeType = "盈利 > 10%，止盈";
       }
       else if (chicangRate < -0.2 && sumAccount > 0) {
@@ -93,16 +100,26 @@ var qtAvg = function () {
         stoke = -sumStoke;
       }
 
-      // if (sumStoke + stoke == 0) {
-      //   chicangStokeAvgCost = 0;
-      //   chicangRate = 0;
-      // } else {
-        chicangStokeAvgCost = (sumStoke * chicangStokeAvgCost + stoke * lastPrice) / (sumStoke + stoke);
-        chicangStokeAvgCost = chicangStokeAvgCost.toFixed(4) - 0;
+      // 清仓操作
+      if (sumStoke + stoke == 0) {
+        chicangStokeAvgCost = 0;
+        chicangRate = 0;
+      } else {
+        // 止盈操作
+        if (isSell) {
+          chicangStokeAvgCost = lastPrice;
+          chicangRate = 0;
+          sellCount++;
+        }
+        // 一般操作
+        else {
+          chicangStokeAvgCost = (sumStoke * chicangStokeAvgCost + stoke * lastPrice) / (sumStoke + stoke);
+          chicangStokeAvgCost = chicangStokeAvgCost.toFixed(4) - 0;
 
-        chicangRate = (lastPrice - chicangStokeAvgCost) / chicangStokeAvgCost;
-        chicangRate = chicangRate.toFixed(4) - 0;
-      // }
+          chicangRate = (lastPrice - chicangStokeAvgCost) / chicangStokeAvgCost;
+          chicangRate = chicangRate.toFixed(4) - 0;
+        }
+      }
     }
 
     // 未做交易
@@ -110,12 +127,16 @@ var qtAvg = function () {
       continue
     }
 
+    // 如果卖出操作手续费提升
+    if (isSell) {
+      sumFee = sumFee + 5;
+    }
+
     sumStoke = sumStoke + stoke;
     sumFee = sumFee + 5;
     sumAccount = sumAccount - (stoke * 100 * lastPrice) - 5;
     sumValue = sumAccount + sumStoke * 100 * lastPrice;
     sumGainLossRate = (((sumValue - baseAccount) / baseAccount) * 100).toFixed(3) + '%';
-
 
     var res = `
 ----${element.time_key} (${index})--${tradeType}--${oneUnitStoke} (手)----
@@ -150,6 +171,6 @@ console.log(`账户总价值：${sumValue} 元`)
 console.log(`账户总盈亏：${sumValue - baseAccount} 元`)
 console.log(`账户总盈亏比例：${sumGainLossRate}`)
 console.log('交易手续费：', sumFee)
-console.log('清仓次数: ', clearCount)
+console.log('清仓次数: ', sellCount)
 
 console.log(``)

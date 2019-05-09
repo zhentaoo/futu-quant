@@ -20,8 +20,8 @@ var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个�
 var clearCount = 0; //清仓次数
 
 // var startTime = '2013-03-30';
-var startTime = '2014-03-30';
-// var startTime = '2015-03-30';
+// var startTime = '2014-03-30';
+var startTime = '2015-03-30';
 // var startTime = '2016-03-30';
 // var startTime = '2017-03-30';
 // var startTime = '2018-03-30';
