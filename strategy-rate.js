@@ -3,7 +3,7 @@ var ETF = require('./data-r40/500ETF.json');
 var baseAccount = 100000; //初始账户钱:10W
 var baseShou = 10; //每次交易购买10手
 
-var sumAccount = 200000; // 账户钱:10W
+var sumAccount = 100000; // 账户钱:10W
 var sumStoke = 0; // 账户总手数，一手100股，初始为0（有多少股）
 var sumValue = 0; // 账户总价值（账户股票对应价值）
 var sumGainLossRate = 0; // 账户总盈亏
@@ -15,13 +15,15 @@ var chicangStokeAvgCost = 0; //股票成本价
 
 var lastPrice = 0; //股票最后交易日价格
 
-var dingtouBase = 1000; // 定投金额(元)，每次购股花费
+var dingtouBase = 2000; // 定投金额(元)，每次购股花费
 var dingtouCycle = 20; // 定投周期(日)，五个交易日为一周，20个交易日为一月
 
-var startTime = '2013-05-01';
-// var startTime = '2016-12-01';
-// var startTime = '2017-12-01';
-// var startTime = '2018-12-01';
+var startTime = '2013-03-30';
+// var startTime = '2014-03-30';
+// var startTime = '2015-03-30';
+// var startTime = '2016-03-30';
+// var startTime = '2017-03-30';
+// var startTime = '2018-03-30';
 var endTime = "2019-03-30";
 
 /**
@@ -85,7 +87,7 @@ var qtAvg = function () {
       }
 
       // 不能卖的比持有的多
-      if(stoke < 0 && Math.abs(stoke) > sumStoke) {
+      if (stoke < 0 && Math.abs(stoke) > sumStoke) {
         stoke = -sumStoke;
       }
 
@@ -97,7 +99,7 @@ var qtAvg = function () {
         chicangStokeAvgCost = chicangStokeAvgCost.toFixed(4) - 0;
 
         chicangRate = (lastPrice - chicangStokeAvgCost) / chicangStokeAvgCost;
-        chicangRate =  chicangRate.toFixed(4) - 0;
+        chicangRate = chicangRate.toFixed(4) - 0;
       }
     }
 
@@ -112,24 +114,56 @@ var qtAvg = function () {
     sumValue = sumAccount + sumStoke * 100 * lastPrice;
     sumGainLossRate = (((sumValue - baseAccount) / baseAccount) * 100).toFixed(3) + '%';
 
-    console.log(`-------${element.time_key}-(${index})--${tradeType}--${oneUnitStoke}(手)-------`)
-    console.log('***交易前概览***');
-    console.log(`交易前成本价：${startChicangStokeAvgCost}`)
-    console.log(`当日价格：${lastPrice}`)
-    console.log('交易前持仓总盈亏比', (startChicangRate * 100).toFixed(3)+ '%')
-    console.log('***当日交易***');
-    console.log('今日交易数：', stoke > 0 ? `+${stoke}` : stoke)
-    console.log(`交易后成本价：${chicangStokeAvgCost}`);
-    console.log('交易后持仓总盈亏比', (chicangRate * 100).toFixed(3)+'%')
-    console.log('***当日结算***');
-    console.log(`账户总持仓：${sumStoke}手 (${sumStoke * 100 * chicangStokeAvgCost}元)`);
-    console.log(`账户总现金：${sumAccount} 元`)
-    console.log(`账户总价值：${sumValue} 元`)
-    console.log(`账户总盈亏：${sumValue - baseAccount} 元`)
-    console.log(`账户总盈亏比例：${sumGainLossRate}`)
-    console.log('交易手续费：', sumFee)
-    console.log(``)
+
+    var res = `
+----${element.time_key} (${index})--${tradeType}--${oneUnitStoke} (手)----
+  ***交易前概览***
+      交易前成本价：${ startChicangStokeAvgCost}
+      当日价格：${ lastPrice}
+      交易前持仓总盈亏比: ${(startChicangRate * 100).toFixed(3) + '%'}
+  ***当日交易***
+      今日交易数：${stoke > 0 ? '+' + stoke : stoke}
+      交易后成本价：${ chicangStokeAvgCost}
+      交易后持仓总盈亏比:${(chicangRate * 100).toFixed(3) + '%'}
+  ***当日结算***
+      账户总持仓：${ sumStoke} 手(${sumStoke * 100 * chicangStokeAvgCost}元)
+        账户总现金：${ sumAccount} 元
+      账户总价值：${ sumValue} 元
+      账户总盈亏：${ sumValue - baseAccount} 元
+      账户总盈亏比例：${ sumGainLossRate}
+      交易手续费: ${sumFee}
+`
+
+    console.log(res)
+    // console.log(`-------${element.time_key}-(${index})--${tradeType}--${oneUnitStoke}(手)-------`)
+    // console.log('***交易前概览***');
+    // console.log(`交易前成本价：${startChicangStokeAvgCost}`)
+    // console.log(`当日价格：${lastPrice}`)
+    // console.log('交易前持仓总盈亏比', (startChicangRate * 100).toFixed(3) + '%')
+    // console.log('***当日交易***');
+    // console.log('今日交易数：', stoke > 0 ? `+${stoke}` : stoke)
+    // console.log(`交易后成本价：${chicangStokeAvgCost}`);
+    // console.log('交易后持仓总盈亏比', (chicangRate * 100).toFixed(3) + '%')
+    // console.log('***当日结算***');
+    // console.log(`账户总持仓：${sumStoke}手 (${sumStoke * 100 * chicangStokeAvgCost}元)`);
+    // console.log(`账户总现金：${sumAccount} 元`)
+    // console.log(`账户总价值：${sumValue} 元`)
+    // console.log(`账户总盈亏：${sumValue - baseAccount} 元`)
+    // console.log(`账户总盈亏比例：${sumGainLossRate}`)
+    // console.log('交易手续费：', sumFee)
+    // console.log(``)
   }
 }
 
 qtAvg();
+
+console.log(`-------${startTime}~${endTime}--定投+止盈 ${ETF[0].code}-------`)
+console.log(`当日价格：${lastPrice}`)
+console.log(`交易后成本价：${chicangStokeAvgCost}`);
+console.log(`账户总持仓：${sumStoke}手 (${sumStoke * 100 * chicangStokeAvgCost}元)`);
+console.log(`账户总现金：${sumAccount} 元`)
+console.log(`账户总价值：${sumValue} 元`)
+console.log(`账户总盈亏：${sumValue - baseAccount} 元`)
+console.log(`账户总盈亏比例：${sumGainLossRate}`)
+console.log('交易手续费：', sumFee)
+console.log(``)
